@@ -12,24 +12,17 @@ set -e
 : "${AWS_DEFAULT_REGION:?Missing AWS_DEFAULT_REGION}"
 : "${INTERVAL:?Missing INTERVAL}"
 
-# =========================
-# CONFIGURAZIONE
-# =========================
-export MONGO_URI=""
-export S3_BUCKET=""
-export S3_PREFIX=""
-export AWS_ACCESS_KEY_ID=""
-export AWS_SECRET_ACCESS_KEY=""
-export AWS_DEFAULT_REGION=""
-
 DATE=$(date +"%Y-%m-%d_%H-%M")
 INTERVAL=14
 
-BACKUP_ROOT="./mongodb/backup"
+BACKUP_ROOT="/mongodb/backup"
 DEST_DIR="$BACKUP_ROOT/$DATE"
-LOG_FILE="./mongodb/backup.log"
+LOG_FILE="/mongodb/backup.log"
 
 ARCHIVE="$DEST_DIR.tar.gz"
+
+mkdir -p "$BACKUP_ROOT"
+mkdir -p "$DEST_DIR"
 
 log() {
   echo -e "\033[32m[$(date -u +"%Y-%m-%d %H:%M:%S")] $1\033[0m"
@@ -38,8 +31,6 @@ log() {
 
 # =========================
 log "Starting backup MongoDB"
-
-mkdir -p "$DEST_DIR"
 
 mongodump \
   --uri="$MONGO_URI" \
