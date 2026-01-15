@@ -26,21 +26,20 @@ Backup behavior is **fully configurable via environment variables**, making it i
 
 ### 🔴 Required
 
-| Variable                | Description                        |
-| ----------------------- | ---------------------------------- |
-| `MONGO_URI`             | MongoDB connection URI             |
-| `S3_BUCKET`             | S3 bucket name                     |
-| `AWS_ACCESS_KEY_ID`     | AWS Access Key                     |
-| `AWS_SECRET_ACCESS_KEY` | AWS Secret Key                     |
-| `AWS_DEFAULT_REGION`    | AWS region (e.g. `eu-north-1`)     |
+| Variable                | Description                    |
+| ----------------------- | ------------------------------ |
+| `MONGO_URI`             | MongoDB connection URI         |
+| `S3_BUCKET`             | S3 bucket name                 |
+| `AWS_ACCESS_KEY_ID`     | AWS Access Key                 |
+| `AWS_SECRET_ACCESS_KEY` | AWS Secret Key                 |
+| `AWS_DEFAULT_REGION`    | AWS region (e.g. `eu-north-1`) |
 
 ### 🟡 Optional
 
-| Variable        | Default    | Description                    |
-| --------------- | ---------- | ------------------------------ |
-| `S3_PREFIX`     | `mongodb`  | Path prefix in the bucket      |
-| `BACKUP_ROOT`   | `/backups` | Local backup directory         |
-| `INTERVAL_DAYS` | `14`       | Local retention (days)         |
+| Variable        | Default   | Description               |
+| --------------- | --------- | ------------------------- |
+| `S3_PREFIX`     | `mongodb` | Path prefix in the bucket |
+| `INTERVAL_DAYS` | `14`      | Local retention (days)    |
 
 ---
 
@@ -65,7 +64,7 @@ docker run --rm \
     -e AWS_SECRET_ACCESS_KEY="SECRET..." \
     -e AWS_DEFAULT_REGION="eu-north-1" \
     -v $(pwd)/backups:/mongodb \
-    mongo-backup-s3
+    ghcr.io/lbdsh-core/mongodump:latest
 ```
 
 Backups will be saved locally in `./backups` and uploaded to S3.
@@ -81,20 +80,17 @@ version: "3.9"
 
 services:
   mongo-backup:
-    image: mongo-backup-s3
-    build: .
+    image: ghcr.io/lbdsh-core/mongodump:0.1.0
     environment:
       MONGO_URI: "mongodb://user:password@mongo:27017/"
       S3_BUCKET: "my-backup-bucket"
-      S3_PREFIX: "mongodb"
-      INTERVAL_DAYS: 14
-
       AWS_ACCESS_KEY_ID: "AKIA..."
       AWS_SECRET_ACCESS_KEY: "SECRET..."
       AWS_DEFAULT_REGION: "eu-north-1"
-
+      S3_PREFIX: "mongodb"
+      INTERVAL_DAYS: 14
     volumes:
-        - ./backups:/backups
+        - ./backups:/mongodb
 ```
 
 ### ▶️ Run
@@ -110,8 +106,8 @@ docker compose run --rm mongo-backup
 ```text
 s3://my-backup-bucket/
 └── mongodb/
-        └── 2026-01-15_02-00/
-                └── 2026-01-15_02-00.tar.gz
+    └── 2026-01-15_02-00/
+        └── 2026-01-15_02-00.tar.gz
 ```
 
 ---
@@ -137,22 +133,3 @@ Use an **external cron**:
 ```cron
 0 2 * * * docker compose run --rm mongo-backup
 ```
-
----
-
-## 🔐 Security (IMPORTANT)
-
-* ❌ Do not commit AWS credentials
-* ✅ Use a `.env` file ignored by git
-* ✅ Prefer **IAM Role** (EC2 / ECS)
-* ✅ IAM policy with minimal permissions
-
----
-
-## 🚀 Possible extensions
-
-* Backup with `--oplog` (Replica Set)
-* GPG encryption
-* `zstd` compression
-* MinIO / Wasabi support
-* S3 Lifecycle → Glacier
