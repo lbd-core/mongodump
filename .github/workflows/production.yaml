@@ -47,11 +47,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker image
-        run: docker build -t ghcr.io/lbdsh-core/${{vars.REPO_NAME}}:latest -t ghcr.io/lbdsh-core/${{vars.REPO_NAME}}:${{ needs.versioning.outputs.GitVersion_SemVer }} -f ./ci/Dockerfile .
+        run: docker build -t ghcr.io/lbd-core/${{vars.REPO_NAME}}:latest -t ghcr.io/lbd-core/${{vars.REPO_NAME}}:${{ needs.versioning.outputs.GitVersion_SemVer }} -f ./ci/Dockerfile .
       - name: Push Docker image
         run: |
-          docker push ghcr.io/lbdsh-core/${{vars.REPO_NAME}}:latest
-          docker push ghcr.io/lbdsh-core/${{vars.REPO_NAME}}:${{ needs.versioning.outputs.GitVersion_SemVer }}
+          docker push ghcr.io/lbd-core/${{vars.REPO_NAME}}:latest
+          docker push ghcr.io/lbd-core/${{vars.REPO_NAME}}:${{ needs.versioning.outputs.GitVersion_SemVer }}
       - name: Tag repo with new version
         uses: cardinalby/git-tag-action@master
         env:

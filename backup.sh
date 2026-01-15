@@ -47,7 +47,6 @@ rm -rf "$DEST_DIR"
 # =========================
 log "Uploading to S3..."
 echo "Uploading $ARCHIVE to s3://$S3_BUCKET/$S3_PREFIX/$DATE"
-
 aws s3 cp \
   "$ARCHIVE" \
   "s3://$S3_BUCKET/$S3_PREFIX/$DATE/$(basename "$ARCHIVE")" \
@@ -55,7 +54,5 @@ aws s3 cp \
 
 # =========================
 log "Removing local backups older than $INTERVAL days"
-
 find "$BACKUP_ROOT" -type f -mtime +"$INTERVAL" -exec rm -f {} \;
-
 log "Backup completed and uploaded to S3 "
