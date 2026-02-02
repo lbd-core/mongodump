@@ -36,10 +36,11 @@ Backup behavior is **fully configurable via environment variables**, making it i
 
 ### 🟡 Optional
 
-| Variable        | Default   | Description               |
-| --------------- | --------- | ------------------------- |
-| `S3_PREFIX`     | `mongodb` | Path prefix in the bucket |
-| `INTERVAL_DAYS` | `14`      | Local retention (days)    |
+| Variable        | Default     | Description                         |
+| --------------- | ----------- | ----------------------------------- |
+| `S3_PREFIX`     | `mongodb`   | Path prefix in the bucket           |
+| `INTERVAL_DAYS` | `14`        | Local retention (days)              |
+| `CRON_SCHEDULE` | `0 2 * * *` | Cron schedule for automatic backups |
 
 ---
 
@@ -64,6 +65,7 @@ docker run --rm \
     -e AWS_SECRET_ACCESS_KEY="SECRET..." \
     -e AWS_DEFAULT_REGION="eu-north-1" \
     -e INTERVAL=14 \
+    -e CRON_SCHEDULE="0 2 * * *" \
     -v $(pwd)/backups:/mongodb \
     ghcr.io/lbdsh-core/mongodump:latest
 ```
@@ -90,6 +92,7 @@ services:
       AWS_SECRET_ACCESS_KEY: "SECRET..."
       AWS_DEFAULT_REGION: "eu-north-1"
       INTERVAL: 14
+      CRON_SCHEDULE: "0 2 * * *"
     volumes:
         - ./backups:/mongodb
 ```
