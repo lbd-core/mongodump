@@ -67,7 +67,7 @@ docker run --rm \
     -e INTERVAL=14 \
     -e CRON_SCHEDULE="0 2 * * *" \
     -v $(pwd)/backups:/mongodb \
-    ghcr.io/lbdsh-core/mongodump:latest
+    ghcr.io/lbd-core/mongodump:latest
 ```
 
 Backups will be saved locally in `./backups` and uploaded to S3.
@@ -83,7 +83,7 @@ version: "3.9"
 
 services:
   mongo-backup:
-    image: ghcr.io/lbdsh-core/mongodump:latest
+    image: ghcr.io/lbd-core/mongodump:latest
     environment:
       MONGO_URI: "mongodb://user:password@mongo:27017/"
       S3_BUCKET: "my-backup-bucket"
