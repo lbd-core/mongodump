@@ -48,8 +48,7 @@ rm -rf "$DEST_DIR"
 log "Uploading to S3..."
 aws s3 cp \
   "$ARCHIVE" \
-  "s3://$S3_BUCKET/$S3_PREFIX/$DATE/$(basename "$ARCHIVE")" \
-  --only-show-errors 
+  "s3://$S3_BUCKET/$S3_PREFIX/$DATE/$(basename "$ARCHIVE")"
 
 # =========================
 log "Removing local backups older than $INTERVAL days"
